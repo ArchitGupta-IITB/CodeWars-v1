@@ -1,8 +1,3 @@
-corner=["NE","SW","SE","NW"]
-side=["UP","DW","RT","LT"]
-commands=[]
-dic={0:'UP',1:'NW',2:'LT',3:"SW",4:"DW",5:"SE",6:"RT",7:"NE"}
-
 
 def ActRobot(robot):
         corner=["NE","SW","SE","NW"]

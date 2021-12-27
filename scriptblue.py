@@ -124,22 +124,41 @@ def nextMove(robot):
 
 def generate(s,t):
                 a,b = t
+                aN,bN,abstr=""
                 if s=="UP":
-                        return(a,b+1)
+                        aN=a
+                        bN=b+1
                 if s=="NE":
-                        return(a+1,b+1)
+                        aN=a+1
+                        bN=b+1
                 if s=="RT":
-                        return(a+1,b)
+                        aN=a+1
+                        bN=b
                 if s=="SE":
-                        return(a+1,b-1)
+                        aN=a+1
+                        bN=b-1
                 if s=="DW":
-                        return(a,b-1)
+                        an=a
+                        bN=b-1
                 if s=="SW":
-                        return(a-1,b-1)
+                        an=a-1
+                        bN=b-1
                 if s=="LT":
-                        return(a-1,b)
+                        an=a-1
+                        bN=b
                 if s=="NW":
-                        return(a-1,b+1)
+                        an=a-1
+                        bN=b+1
+                if aN<10:
+                        abstr+="0"+str(aN)
+                if aN>9:
+                        abstr+=str(aN)
+                if bN<10:
+                        abstr+="0"+str(bN)
+                if bN>9:
+                        abstr+=str(bN)
+                return (aN.bN,abstr) 
+                
 
 
 
@@ -147,35 +166,60 @@ def ActBase(base):
         '''
         Archit made changes
         '''
-        ebx="  "
-        eby="  "
-        basiN=" "*20
-        st="  "#enemy position
-        baso=base.GetYourSignal()
-        sigli=base.GetListOfSignals()
-        c,d=base.GetPosition()
-        if c<10:
-                e="0"+str(c)
-        if c>9:
-                e=str(c)
-        if d<10:
-                f="0"+str(d)
-        if d>9:
-                f=str(d)       
-                basiN+=e+f
-                basiN+=st
-                basiN+=ebx+eby
-        if baso[6:10]!=" "*4:
-                basiN=basiN[0:6]+baso[6:10]+basiN[10:]
+        '''
+    
+        Add your code here
+        Robot Signal="XXYYSPTXTYSSP"; for blank keep space
+        P=attacking or defense(A/D)
+            XXYY=coord SP= special position SS special Structure EB-enemy Base
+        Base Signal="BXBYEXEYNANCND0001"
+                     01234567890123456789
+        '''
+        #creating signal for the first time
+        if base.GetYourSignal()=="":
+                base_X_int,base_Y_int=base.GetPosition()
+                base_X_str=""
+                base_Y_str=""
+                if base_X_int<10:
+                        base_X_str="0"+str(base_X_int)
+                if base_X_int>9:
+                        base_X_str=str(base_X_int)
+                if base_Y_int<10:
+                        base_Y_str="0"+str(base_Y_int)
+                if base_Y_int>9:
+                        base_Y_str=str(base_Y_int)
+                base.SetYourSignal(base_X_str+base_Y_str+" "*10+"0"*4+"  ")
         
-        for w in sigli:
-                if w[10:12]=="EB":
-                        ebx=w[6:8]
-                        eby=w[8:10]
+        
+        
+        #basic info recollection
+        base_signal_Old=base.GetYourSignal()
+        enemy_base_found=True
+        if base_signal_Old[4:8]!=" "*4:
+                enemy_base_found=False
+        enemy_baseX=base_signal_Old[4:6]
+        enemy_baseY=base_signal_Old[6:8]
+        base_signal_New=""
+
+        #timeframe renewal
+        timestamp=base_signal_Old[14:18]
+        timestamp_New=str(1+int(timestamp))
+
+ 
+        robot_signal_list=base.GetListOfSignals()
+               
+        if enemy_base_found==False:
+                for w in robot_signal_list:
+                        if w[10:12]=="EB":
+                                enemy_baseX=w[6:8]
+                                enemy_baseY=w[8:10]
+        
         if base.GetElixir() > 500:
                 base.create_robot('')
         
         #Repeat 8 times in 8 dir
+        #searching for enemy robots near base
+        st="  "#enemy position
         if base.investigate_up()=="enemy":
                 st="UP"
                 base.DeployVirus(800)
@@ -200,24 +244,9 @@ def ActBase(base):
         if base.investigate_ne()=="enemy":
                 st="NE"
                 base.DeployVirus(800)
-        c,d=base.GetPosition()
-        temps=""
-        e="  "
-        f="  "
-        if st!="  ":
-                if c<10:
-                        e="0"+str(c)
-                if c>9:
-                        e=str(c)
-                if d<10:
-                        f="0"+str(d)
-                if d>9:
-                        f=str(d)       
-                basiN+=e+f
-                basiN+=st
-                basiN+=ebx+eby
-                
-                base.create_robot(temps)
+        
+        base_signal_New=base_signal_Old[0:4]+enemy_baseX+enemy_baseY+timestamp_New
+        base.SetYourSignal(base_signal_New)
         return
 
         

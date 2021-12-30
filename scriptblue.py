@@ -143,28 +143,28 @@ def generate(s,t):
                 aN,bN,abstr=""
                 if s=="UP":
                         aN=a
-                        bN=b+1
+                        bN=b-1
                 if s=="NE":
                         aN=a+1
-                        bN=b+1
+                        bN=b-1
                 if s=="RT":
                         aN=a+1
                         bN=b
                 if s=="SE":
                         aN=a+1
-                        bN=b-1
+                        bN=b+1
                 if s=="DW":
                         an=a
-                        bN=b-1
+                        bN=b+1
                 if s=="SW":
                         an=a-1
-                        bN=b-1
+                        bN=b+1
                 if s=="LT":
                         an=a-1
                         bN=b
                 if s=="NW":
                         an=a-1
-                        bN=b+1
+                        bN=b-1
                 if aN<10:
                         abstr+="0"+str(aN)
                 if aN>9:
@@ -185,15 +185,18 @@ def distance_Btw(s1,s2):#XXYY
 def ActBase(base):
         '''
         Add your code here
-                Robot Signal="XXYYSPTXTYSSPTGURLR"; for blank keep space
+                Robot Signal="XXYYSPTXTYSSPTGURLRT"; for blank keep space
                               01234567890123456789
+                              t=reached yet?
                 P=attacking or defense(A/D/R)
                 XXYY=coord SP= special position SS special Structure EB-enemy Base
-                Base Signal="BXBYEXEYNANCND0001"
+                Base Signal="BXBYEXEYNANCND0001TR"
                              01234567890123456789
         '''
         #creating signal for the first time
         if base.GetYourSignal()=="":
+                canvasX=base.GetDimensionX()
+                canvasY=base.GetDimensionY()
                 base_X_int,base_Y_int=base.GetPosition()
                 base_X_str=""
                 base_Y_str=""
@@ -207,8 +210,22 @@ def ActBase(base):
                         base_Y_str=str(base_Y_int)
                 base.SetYourSignal(base_X_str+base_Y_str+" "*10+"0"*4+"  ")
                 #create initial bots under here
-                
+                totalrobots=0
                 #Resource collectors
+                for i in range(3,canvasX,5):
+                        for j in range(3,canvasY,5):
+                                if i<10:
+                                        istr="0"+str(i)
+                                if i>9:
+                                        istr=str(i)
+                                if j<10:
+                                        jstr="0"+str(j)
+                                if j>9:
+                                        jstr=str(j)
+                                base.create_robots(base_X_str+base_Y_str+"  "+istr+jstr+"  "+"R"+"  "+"    "+"N")
+                                base.create_robots(base_X_str+base_Y_str+"  "+istr+jstr+"  "+"R"+"  "+"    "+"N")
+                                totalrobots+=1
+                '''
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"UP"+"1510")
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"NW"+"1510")
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"LT"+"1510")
@@ -225,13 +242,17 @@ def ActBase(base):
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"SE"+"1005")
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"RT"+"1005")
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"NE"+"1005")               
-                
+                '''
                 #DEFENSE
-                base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"D"+"NW"+"0500")
-                base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"D"+"sW"+"0500")
-                base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"D"+"SE"+"0500")
-                base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"D"+"NE"+"0500")
+                #Review this with team
+                base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"NW"+"0500"+"Y")
+                base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"SW"+"0500"+"Y")
+                base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"SE"+"0500"+"Y")
+                base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"NE"+"0500"+"Y")
                 
+                totalrobots+=4
+                #creating signal
+                base.SetYourSignal(base_X_str+base_Y_str+" "*10+"0"*4+str(totalrobots))
                 
                 #created bots
         
@@ -247,7 +268,10 @@ def ActBase(base):
         #timeframe renewal
         timestamp=base_signal_Old[14:18]
         timestamp_New=str(1+int(timestamp))
-
+        
+        #Remaking of bots in intervals
+        if int(timestamp)%50==0:
+                base.create_robot('')
 
         robot_signal_list=base.GetListOfSignals()
         robot_signal_list_distance_enemybase=[]
@@ -257,12 +281,22 @@ def ActBase(base):
                                 enemy_baseX=w[6:8]
                                 enemy_baseY=w[8:10]
         
-        
+        #Recounting Status of Robots
+        resource_collectors=0
+        for i in robot_signal_list:
+                if i[12]=="R":
+                        resource_collectors+=1
+        defender=0
+        for i in robot_signal_list:
+                if i[12]=="D":
+                        defender+=1
+
         #attack strategy implementation
-        
+        #Review Pending
         attacking_no_old=base_signal_Old[8:10]
         attacking_no_New=""
         attack_counter=0
+        
         #Calculating the distance between 
         if enemy_base_found:
 
@@ -271,16 +305,16 @@ def ActBase(base):
         
         
                 for i in range(0,len(robot_signal_list)):
-                        if robot_signal_list[i][12]=="A" and robot_signal_list_distance_enemybase[i]<10:
+                        if robot_signal_list[i][12]=="A" and robot_signal_list_distance_enemybase[i]<base.GetCanvasX()/2:
                                 attack_counter+=1
-        
+
+
+
         if attack_counter<10:
                 attacking_no_New="0"+str(attack_counter)
         if attack_counter>9:
                 attacking_no_New=str(attack_counter)
-        
-        #Apply Defense
-        
+                
         
         #Resource must be collected
         
@@ -295,9 +329,9 @@ def ActBase(base):
         st = ""
         
         #enemy position
+        
         if base.investigate_up()=="enemy":
-                st="UP"
-                
+                st="UP"                       
         if base.investigate_nw()=="enemy":
                 st="NW"
         if base.investigate_left()=="enemy":
@@ -312,12 +346,52 @@ def ActBase(base):
                 st="RT"
         if base.investigate_ne()=="enemy":
                 st="NE"
+        
         if st!=" ":
                 base.DeployVirus(800)
         
-        base_signal_New=base_signal_Old[0:4]+enemy_baseX+enemy_baseY+attacking_no_New+timestamp_New
+        base_signal_New=base_signal_Old[0:4]+enemy_baseX+enemy_baseY+attacking_no_New+resource_collectors+defender+timestamp_New+totalrobots
         base.SetYourSignal(base_signal_New)
         
-        return
-
+        #apply defense
+        #checking for defense in 4 corners
+        corner=["NE","SW","SE","NW"]
+        corner_now=[]
+        for i in robot_signal_list:
+                if i[12]=="D":
+                        for j in corner:
+                                if i[13:15]==j:
+                                        corner_now.append(j)
+                                        break
+        for i in range(0,len(corner)-len(corner_now)):
+                if corner[i] not in corner_now:
+                        base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+corner[i]+"0500"+"Y")
         
+        defender=0
+        for i in robot_signal_list:
+                if i[12]=="D":
+                        defender+=1
+
+        if st!="  ":
+                base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+st+"0500"+"Y")
+
+        if int(timestamp)>1000:
+                if defender<12:
+                        base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"  "+"0500"+"Y")
+        
+        #Defense applied
+
+
+        #return
+
+        '''
+        Add your code here
+                Robot Signal="XXYYSPTXTYSSPTGURLRT"; for blank keep space
+                              01234567890123456789
+                              t=reached yet?
+                P=attacking or defense(A/D/R)
+                XXYY=coord SP= special position SS special Structure EB-enemy Base
+                Base Signal="BXBYEXEYNANCND0001TR"
+                             01234567890123456789
+        '''
+        return

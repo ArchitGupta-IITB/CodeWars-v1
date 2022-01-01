@@ -1,11 +1,17 @@
+import random
 from random import randint
 def ActRobot(robot):
-        '''        
+         """"       
         corner=["NE","SW","SE","NW"]
         side=["UP","DW","RT","LT"]
         commands=[]
         dic={0:'UP',1:'NW',2:'LT',3:"SW",4:"DW",5:"SE",6:"RT",7:"NE"}
         robotSignalOld=robot.GetYourSignal()
+        specialStructure=""
+        (robotX,robotY) = robot.GetPosition()
+        specialStructureX=-1
+        specialStructureY=-1
+        specialStructurestr=""
         if robot.GetVirus() > 1000:
                 robot.DeployVirus(200)
         l1=[]
@@ -19,31 +25,31 @@ def ActRobot(robot):
         l1.append(robot.investigate_ne())
         for i in range(0,8):
                 if l1[i]=="enemy-base":
-                        s=robot.GetYourSignal()
-                        robot.setSignal(s[0:4]+dic.values(i)+s[6:10]+"EB")
+                        specialStructure="EB"
                         robot.DeployVirus(200)
+                        (specialStructureX, specialStructureY, specialStructurestr) = generate(robot.GetPosition(),l1[i])
                         break
 
                 if l1[i]=="enemy":
-                        s=robot.GetYourSignal()
-                        robot.setSignal(s[0:4]+dic.values(i)+s[6:10]+"EN")
-                        
+                        specialStructure="EN"                
         
         #attack strategy Archit 
         
         base_signal=robot.GetCurrentBaseSignal()
         if base_signal[4:8]!=" "*4:
-        '''
+                
         
+                """
 
-
-
+        #checking for enemy or base
         up = robot.investigate_up()
         down = robot.investigate_down()
         left = robot.investigate_left()
         right = robot.investigate_right()
         x,y = robot.GetPosition()
         robot.setSignal('')
+
+        # for up
         if up == "enemy" and robot.GetVirus() > 1000:
                 robot.DeployVirus(100)
         elif up == "enemy-base":
@@ -107,9 +113,9 @@ def ActRobot(robot):
                 msg = "base" + msg_x + msg_y
                 robot.setSignal(msg)
                 if robot.GetVirus() > 500:
-                        robot.DeployVirus(500)
+                        robot.DeployVirus(500) 
         
-        
+        #next move
         if len(robot.GetCurrentBaseSignal()) > 0:
                 s = robot.GetCurrentBaseSignal()[4:]
                 sx = int(s[0:2])
@@ -128,7 +134,40 @@ def ActRobot(robot):
                         return 1
         else:
                 return randint(1,4)
+         
+        # attack strategy
+        #if sp=elixir
+        if x!=tx and y!=ty:
+                distx1=tx-x
+                disty1=ty-y
+                distx = abs(tx-x) 
+                disty = abs(ty-y)
+                if distx1>0 and disty<0:
+                        a=randint(1,2)
+                        return a
+                elif distx1<0 and disty>0:
+                        b=randint(3,4)    
+                        return b  
+                elif distx1>0 and disty>0:
+                        c=randint(2,3)
+                        return c
+                elif distx1<0 and disty<0:
+                        return random.choice([1,4]) 
+        """"""if target is not enemy base """"""
+        if x==tx and y==ty:
 
+
+
+                
+
+
+                """ if (xx not equal to tx)
+                #distance between xx and tx
+
+                # for(xx,xx+distance)
+                 return 
+                 
+                 """
         # After checking for any enemy bots, move to target
         # Check ur previous designation if RC, enemy base found, A of friendly base less than threshold, dist less then chg ur status A
         ##Robot Signal="XXYYSPTXTYSSPTGRDDI"; for blank keep space
@@ -138,7 +177,7 @@ def nextMove(robot):
         
         return randint(1,4)
 
-def generate(s,t):
+def generate(s,t):#s=robot position tuple t= direction
                 a,b = t
                 aN,bN,abstr=""
                 if s=="UP":
@@ -176,27 +215,104 @@ def generate(s,t):
                 return (aN.bN,abstr) 
 #complete this Drashti & Suranjan
 def isNear(s1,s2,r):#"XXYY"
-        return True
+        import math
+        xs1=int(s1[0:2])
+        ys1=int(s1[2:4])
+        xs2=int(s2[0:2])
+        ys2=int(s2[2:4])
 
-def distance_Btw(s1,s2):#XXYY
+        xdistance =abs(xs1-xs2)
+        ydistance=abs(ys1-ys2)
+
+        distance=max(xdistance,ydistance)
         
-        return 0
+        
+        if distance<=r :
+                return True
+        else:
+                return False
+
+def distancebtw(s1,s2):#"XXYY"
+        xs1=int(s1[0:2])
+        ys1=int(s1[2:4])
+        xs2=int(s2[0:2])
+        ys2=int(s2[2:4])
+        return max(abs(xs2-xs1),abs(ys1-ys2))
+
+def nextmovement(s1,s2):#XXYY
+                x=int(s1[0:2])
+                y=int(s1[2:4])
+                tx = int(s2[0:2])
+                ty = int(s2[2:4])
+                distx1=tx-x
+                disty1=ty-y
+                distx = abs(tx-x) 
+                disty = abs(ty-y)
+                """
+                if distx==1 and disty==0:
+                        robot.DeployVirus(robot.GetVirus()*0.75)
+                        return 0
+                elif disty==1 and distx==0:
+                        robot.DeployVirus(robot.GetVirus()*0.75)
+                        return 0 
+                """
+                if distx1>0 and disty<0:
+                        a=randint(1,2)
+                        return a
+                elif distx1<0 and disty>0:
+                        b=randint(3,4)    
+                        return b  
+                elif distx1>0 and disty>0:
+                        c=randint(2,3)
+                        return c
+                elif distx1<0 and disty<0:
+                        return random.choice([1,4])   
+                               
+
+                """if x < tx:
+                        return 2
+                if x > tx:
+                        return 4
+                if y < ty :
+                        return 3
+                if y > ty:
+                        return 1"""
+        #return 0
 
 def ActBase(base):
         '''
         Add your code here
                 Robot Signal="XXYYSPTXTYSSPTGURLRT"; for blank keep space
                               01234567890123456789
-                              t=reached yet?
-                P=attacking or defense(A/D/R)
+                              t=reached yet? Y/N
+                P=attacking or defense(A/D/Resorce collector)
                 XXYY=coord SP= special position SS special Structure EB-enemy Base
                 Base Signal="BXBYEXEYNANCND0001TR"
                              01234567890123456789
         '''
         #creating signal for the first time
+        
+        canvasX=base.GetDimensionX()
+        canvasY=base.GetDimensionY()
+        canvaspartitions=[]
+        istr=""
+        jstr=""
+        for i in range(3,canvasX,5):
+                yrange=[]
+                
+                for j in range(3,canvasY,5):
+                        if i<10:
+                                istr="0"+str(i)
+                        if i>9:
+                                istr=str(i)
+                        if j<10:
+                                jstr="0"+str(j)
+                        if j>9:
+                                jstr=str(j)
+                        yrange.append(istr,jstr)
+                canvaspartitions.append(yrange)
+        #creating signal
         if base.GetYourSignal()=="":
-                canvasX=base.GetDimensionX()
-                canvasY=base.GetDimensionY()
                 base_X_int,base_Y_int=base.GetPosition()
                 base_X_str=""
                 base_Y_str=""
@@ -212,18 +328,10 @@ def ActBase(base):
                 #create initial bots under here
                 totalrobots=0
                 #Resource collectors
-                for i in range(3,canvasX,5):
-                        for j in range(3,canvasY,5):
-                                if i<10:
-                                        istr="0"+str(i)
-                                if i>9:
-                                        istr=str(i)
-                                if j<10:
-                                        jstr="0"+str(j)
-                                if j>9:
-                                        jstr=str(j)
-                                base.create_robots(base_X_str+base_Y_str+"  "+istr+jstr+"  "+"R"+"  "+"    "+"N")
-                                base.create_robots(base_X_str+base_Y_str+"  "+istr+jstr+"  "+"R"+"  "+"    "+"N")
+                for i in range(0,len(canvaspartitions)):
+                        for j in range(0,len(canvaspartitions[0])):
+                                base.create_robots(base_X_str+base_Y_str+"  "+canvaspartitions[i][j]+"  "+"R"+"  "+"    "+"N")
+                                #base.create_robots(base_X_str+base_Y_str+"  "+canvaspartitions[i][j]+"  "+"R"+"  "+"    "+"N")
                                 totalrobots+=1
                 '''
                 base.create_robot(base_X_str+base_Y_str+"  "+" "*6+"R"+"UP"+"1510")
@@ -301,7 +409,7 @@ def ActBase(base):
         if enemy_base_found:
 
                 for w in robot_signal_list:
-                        robot_signal_list_distance_enemybase.append(distance_Btw(w[0:4],enemy_baseX+enemy_baseY))
+                        robot_signal_list_distance_enemybase.append(distancebtw(w[0:4],enemy_baseX+enemy_baseY))
         
         
                 for i in range(0,len(robot_signal_list)):
@@ -375,7 +483,7 @@ def ActBase(base):
         if st!="  ":
                 base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+st+"0500"+"Y")
 
-        if int(timestamp)>1000:
+        if int(timestamp)>500:
                 if defender<12:
                         base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"  "+"0500"+"Y")
         

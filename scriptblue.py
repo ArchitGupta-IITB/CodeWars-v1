@@ -1,17 +1,23 @@
 import random
 from random import randint
 def ActRobot(robot):
-         """"       
-        corner=["NE","SW","SE","NW"]
-        side=["UP","DW","RT","LT"]
-        commands=[]
-        dic={0:'UP',1:'NW',2:'LT',3:"SW",4:"DW",5:"SE",6:"RT",7:"NE"}
+         #if u need variables create here or uncomment them      
+        #corner=["NE","SW","SE","NW"]
+        #side=["UP","DW","RT","LT"]
+        #commands=[]
+        #dic={0:'UP',1:'NW',2:'LT',3:"SW",4:"DW",5:"SE",6:"RT",7:"NE"}
         robotSignalOld=robot.GetYourSignal()
         specialStructure=""
         (robotX,robotY) = robot.GetPosition()
         specialStructureX=-1
         specialStructureY=-1
         specialStructurestr=""
+        isCollected=robotSignalOld[19]
+        targetX=int(robotSignalOld[6:8])
+        targetY=int(robotSignalOld[8:10])
+        targetXStrNew=""
+        targetYStrNew=""
+        next_pos=0
         if robot.GetVirus() > 1000:
                 robot.DeployVirus(200)
         l1=[]
@@ -33,135 +39,106 @@ def ActRobot(robot):
                 if l1[i]=="enemy":
                         specialStructure="EN"                
         
-        #attack strategy Archit 
+        #attack strategy
         
         base_signal=robot.GetCurrentBaseSignal()
         if base_signal[4:8]!=" "*4:
-                
-        
-                """
+        #rTX = robotSignalOld[6:8]
+                bEX = base_signal[4:6]
+                targetXStrNew+=bEX
 
-        #checking for enemy or base
-        up = robot.investigate_up()
-        down = robot.investigate_down()
-        left = robot.investigate_left()
-        right = robot.investigate_right()
-        x,y = robot.GetPosition()
-        robot.setSignal('')
+        #rTY = robotSignalOld[8:10]
+                bEY = base_signal[6:8]
+                targetYStrNew+=bEY
 
-        # for up
-        if up == "enemy" and robot.GetVirus() > 1000:
-                robot.DeployVirus(100)
-        elif up == "enemy-base":
-                if x < 10:
-                        msg_x = '0' + str(x)
-                else: 
-                        msg_x = str(x)
-                if y-1 < 10:
-                        msg_y = '0' + str(y-1)
-                else:
-                        msg_y = str(y-1)
-                msg = "base" + msg_x + msg_y
-                robot.setSignal(msg)
-                if robot.GetVirus() > 500:
-                        robot.DeployVirus(500)
-        if down == "enemy" and robot.GetVirus() > 1000:
-                robot.DeployVirus(100)
-        elif down == "enemy-base":
-                
-                if x < 10:
-                        msg_x = '0' + str(x)
-                else: 
-                        msg_x = str(x)
-                if y+1 < 10:
-                        msg_y = '0' + str(y+1)
-                else:
-                        msg_y = str(y+1)
-                msg = "base" + msg_x + msg_y
-                robot.setSignal(msg)
-                if robot.GetVirus() > 500:
-                        robot.DeployVirus(500)
+
+        attrob=int(base_signal[8:10])
+        shudAttack = False  
         
-        if left == "enemy" and robot.GetVirus() > 1000:
-                robot.DeployVirus(100)
-        elif left == "enemy-base":
-                if x - 1 < 10:
-                        msg_x = '0' + str(x-1)
-                else: 
-                        msg_x = str(x-1)
-                if y < 10:
-                        msg_y = '0' + str(y)
-                else:
-                        msg_y = str(y)
-                msg = "base" + msg_x + msg_y
-                robot.setSignal(msg)
-                if robot.GetVirus() > 500:
-                        robot.DeployVirus(500)
-                
-        if right == "enemy" and robot.GetVirus() > 1000:
-                robot.DeployVirus(100)
-        elif right == "enemy-base":
-                x,y = robot.GetPosition()
-                if x+1 < 10:
-                        msg_x = '0' + str(x+1)
-                else: 
-                        msg_x = str(x+1)
-                if y < 10:
-                        msg_y = '0' + str(y)
-                else:
-                        msg_y = str(y)
-                msg = "base" + msg_x + msg_y
-                robot.setSignal(msg)
-                if robot.GetVirus() > 500:
-                        robot.DeployVirus(500) 
-        
-        #next move
-        if len(robot.GetCurrentBaseSignal()) > 0:
-                s = robot.GetCurrentBaseSignal()[4:]
-                sx = int(s[0:2])
-                sy = int(s[2:4])
-                dist = abs(sx-x) + abs(sy-y)
-                if dist==1:
-                        robot.DeployVirus(robot.GetVirus()*0.75)
-                        return 0
-                if x < sx:
-                        return 2
-                if x > sx:
-                        return 4
-                if y < sy :
-                        return 3
-                if y > sy:
-                        return 1
+        if attrob<=certainvalue:    #archit look into this
+                shudAttack=True
         else:
-                return randint(1,4)
-         
-        # attack strategy
-        #if sp=elixir
-        if x!=tx and y!=ty:
-                distx1=tx-x
-                disty1=ty-y
-                distx = abs(tx-x) 
-                disty = abs(ty-y)
-                if distx1>0 and disty<0:
-                        a=randint(1,2)
-                        return a
-                elif distx1<0 and disty>0:
-                        b=randint(3,4)    
-                        return b  
-                elif distx1>0 and disty>0:
-                        c=randint(2,3)
-                        return c
-                elif distx1<0 and disty<0:
-                        return random.choice([1,4]) 
-        """"""if target is not enemy base """"""
-        if x==tx and y==ty:
+               #xxs1=int(robotSignalOld[0:2])
+                #yys1=int(robotSignalOld[2:4])
+                xxs2=int(base_signal[4:6])
+                yys2=int(base_signal[6:8])
+               
+
+                xxdistance=abs(robotX,robotY)
+                yydistance=abs(xxs2,yys2)
+
+                distance=max(xxdistance,yydistance)
+        
+        
+                if distance<=20:
+                        #send robot
+                        shudAttack=True
+        
+        if shudAttack:
+                pass   
 
 
-
+        if  specialStructure=="EB":
+                
+                targetXStrNew+=specialStructureX
+                targetYStrNew+=specialStructureY
+        '''
+        Add your code here
+                Robot Signal="XXYYSPTXTYSSPTGURLRT"; for blank keep space
+                              01234567890123456789
+                              t=reached yet? Y/N
+                P=attacking or defense(A/D/Resorce collector)
+                XXYY=coord SP= special position SS special Structure EB-enemy Base
+                Base Signal="BXBYEXEYNANCND0001TR"
+                             01234567890123456789
+        '''
+        #checking for enemy or b
+        
+        #lets spiral out        
+        if(robotSignalOld[12]=="R"):
+                if robotX==robotSignalOld[6:8] and robotY==robotSignalOld[8:10]:
+                        isCollected="Y"
+                if isCollected=="Y":
+                        if robotX==targetX:
+                                next_pos=2
+                        elif robotX>targetX:
+                                if robotY<=targetY:
+                                        if (robotX-targetX)>(targetY-robotY):
+                                                next_pos=3
+                                        elif (robotX-targetX)==(targetY-robotY):
+                                                next_pos=2
+                                        else:
+                                                next_pos=2
+                                        
+                                else:
+                                        if (robotX-targetX)>(robotY-targetY):
+                                                next_pos=3
+                                        else:
+                                                next_pos=4
+                        else:
+                                if robotY<=targetY:
+                                        if (targetX-robotX)>(targetY-robotY):
+                                                next_pos=1
+                                        elif (targetX-robotX)==(targetY-robotY):
+                                                next_pos=2
+                                        else:
+                                                next_pos=2
+                                        
+                                else:
+                                        if (robotX-targetX)>=(robotY-targetY):
+                                                next_pos=1
+                                        else:
+                                                next_pos=4
+                                
+                                
+                                        
+                                
+                                
                 
 
 
-                """ if (xx not equal to tx)
+        """ 
+                if (xx not equal to tx)
                 #distance between xx and tx
 
                 # for(xx,xx+distance)
@@ -171,11 +148,6 @@ def ActRobot(robot):
         # After checking for any enemy bots, move to target
         # Check ur previous designation if RC, enemy base found, A of friendly base less than threshold, dist less then chg ur status A
         ##Robot Signal="XXYYSPTXTYSSPTGRDDI"; for blank keep space
-def nextMove(robot):
-        
-                
-        
-        return randint(1,4)
 
 def generate(s,t):#s=robot position tuple t= direction
                 a,b = t
@@ -256,6 +228,8 @@ def nextmovement(s1,s2):#XXYY
                         robot.DeployVirus(robot.GetVirus()*0.75)
                         return 0 
                 """
+                poss=[]
+                """
                 if distx1>0 and disty<0:
                         a=randint(1,2)
                         return a
@@ -267,16 +241,18 @@ def nextmovement(s1,s2):#XXYY
                         return c
                 elif distx1<0 and disty<0:
                         return random.choice([1,4])   
-                               
+                """
+                
 
-                """if x < tx:
-                        return 2
+                if x < tx:
+                        poss.append(2)
                 if x > tx:
-                        return 4
+                        poss.append(4) 
                 if y < ty :
-                        return 3
+                        poss.append(3)
                 if y > ty:
-                        return 1"""
+                        poss.append(1)
+                return random.choice(poss)
         #return 0
 
 def ActBase(base):
@@ -311,6 +287,17 @@ def ActBase(base):
                                 jstr=str(j)
                         yrange.append(istr,jstr)
                 canvaspartitions.append(yrange)
+        base_X_int,base_Y_int=base.GetPosition()
+        base_X_str=""
+        base_Y_str=""
+        if base_X_int<10:
+                base_X_str="0"+str(base_X_int)
+        if base_X_int>9:
+                base_X_str=str(base_X_int)
+        if base_Y_int<10:
+                base_Y_str="0"+str(base_Y_int)
+        if base_Y_int>9:
+                base_Y_str=str(base_Y_int)
         #creating signal
         if base.GetYourSignal()=="":
                 base_X_int,base_Y_int=base.GetPosition()
@@ -359,6 +346,87 @@ def ActBase(base):
                 base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"NE"+"0500"+"Y")
                 
                 totalrobots+=4
+                
+                a=robotSignalOld[4:6]
+                x,y=robot.GetPosition()
+                BX,BY=base.GetPosition() 
+                distx=abs(BX-x)
+                disty=abs(BY-y)
+                
+                
+                
+                possible=[]
+                if a=="NE":
+                        if (distx==0 or distx==1) and (disty==0 or disty==1):
+                                possible=[1,2]
+                        elif distx==2 and disty==0:
+                                possible=[1,4]
+                        elif distx==0 and disty==2:
+                                possible=[3,2]
+                        elif distx==1 and disty==1:
+                                possible=[1,4,3,2]
+                        if distx==1 and disty==2:
+                                possible=[2,3,4]
+                        elif distx==2 and disty==1:
+                                possible=[1,3,4]
+                        elif distx==2 and disty==2:
+                                possible=[3,4]         
+                        
+
+                if a=="NW":
+                        if (distx==0 or distx==1) and (disty==0 or disty==1):
+                                possible=[1,4]
+                        elif distx==2 and disty==0:
+                                possible=[1,4]
+                        elif distx==0 and disty==2:
+                                possible=[3,2]
+                        elif distx==1 and disty==1:
+                                possible=[1,4,3,2]
+                        if distx==1 and disty==2:
+                                possible=[2,3,4]
+                        elif distx==2 and disty==1:
+                                possible=[1,3,2]
+                        elif distx==2 and disty==2:
+                                possible=[3,2]         
+                        
+                                       
+                if a=="SW":
+                        if (distx==0 or distx==1) and (disty==0 or disty==1):
+                                possible=[1,2]
+                        elif distx==2 and disty==0:
+                                possible=[1,4]
+                        elif distx==0 and disty==2:
+                                possible=[3,2]
+                        elif distx==1 and disty==1:
+                                possible=[1,4,3,2]
+                        if distx==1 and disty==2:
+                                possible=[2,3,4]
+                        elif distx==2 and disty==1:
+                                possible=[1,3,4]
+                        elif distx==2 and disty==2:
+                                possible=[3,4]         
+                        
+                                
+                if a=="SE":
+                        if (distx==0 or distx==1) and (disty==0 or disty==1):
+                                possible=[3,2]
+                        elif distx==2 and disty==0:
+                                possible=[3,4]
+                        elif distx==0 and disty==2:
+                                possible=[1,2]
+                        elif distx==1 and disty==1:
+                                possible=[1,4,3,2]
+                        if distx==1 and disty==2:
+                                possible=[2,1,4]
+                        elif distx==2 and disty==1:
+                                possible=[1,3,4]
+                        elif distx==2 and disty==2:
+                                possible=[1,4]         
+                        
+                return random.choice(possible)       
+
+                
+                 
                 #creating signal
                 base.SetYourSignal(base_X_str+base_Y_str+" "*10+"0"*4+str(totalrobots))
                 

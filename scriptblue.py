@@ -204,7 +204,7 @@ def ActRobot(robot):
                 y=robotY
                 BX=int(base_signal[0:2])
                 BY=int(base_signal[2:4])
-                robot.GetBasePosition() 
+                #robot.GetBasePosition() 
                 distx=abs(BX-x)
                 disty=abs(BY-y)
                 if direc=="NE":
@@ -305,7 +305,7 @@ def ActRobot(robot):
         
         if next_pos in not_possible:
                 poss=[]
-                for i in range(1,5):
+                for i in range(1,4):
                         if i not in not_possible:
                                 poss.append(i)
                 next_pos=poss[randint(0,len(poss)-1)]          
@@ -399,7 +399,7 @@ def nextmovement(s1,s2):#XXYY
                 distx = abs(tx-x) 
                 disty = abs(ty-y)
                 """
-                poss=[]
+                poss=[0]
                 
 
                 if x < tx:
@@ -486,9 +486,12 @@ def ActBase(base):
                 #create initial bots under here
                 elix=base.GetElixir()
                 totalrobots=0
+                t=1
                 #Resource collectors
-                for i in range(0,len(canvaspartitions)):
-                        for j in range(0,len(canvaspartitions[i])):
+                if base_X_int>canvasX/2:
+                        t=-1
+                for i in range(0,len(canvaspartitions),t):
+                        for j in range(0,len(canvaspartitions[i]),t):
                                 if elix>1000:
                                         base.create_robot(base_X_str+base_Y_str+"  "+canvaspartitions[i][j]+"  "+"R"+"  "+str(canvasX)+str(canvasY)+"N")
                                         #base.create_robot(base_X_str+base_Y_str+"  "+canvaspartitions[i][j]+"  "+"R"+"  "+"    "+"N")
@@ -591,10 +594,10 @@ def ActBase(base):
                 
         
         #Resource must be collected
-        if resource_collectors<12:
+        if resource_collectors<12 and base.GetElixir()>500:
                 togo=random.choice(random.choice(canvaspartitions))
                 base.create_robot(base_X_str+base_Y_str+"  "+togo+"  "+"R"+"  "+str(canvasX)+str(canvasY)+"N")
-        if int(timestamp)%50==0 and base.GetElixir()>400:
+        if int(timestamp)%50==0 and base.GetElixir()>500:
                 togo=random.choice(random.choice(canvaspartitions))
                 base.create_robot(base_X_str+base_Y_str+"  "+togo+"  "+"R"+"  "+str(canvasX)+str(canvasY)+"N")
         

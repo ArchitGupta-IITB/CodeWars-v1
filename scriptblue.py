@@ -69,8 +69,8 @@ def ActRobot(robot):
                         robot.DeployVirus(400)
                         (specialStructureX, specialStructureY, specialStructurestr) = generate(robot.GetPosition(),l1[i])
                         if not baseFoundEnemyBase:
-                                enemyBaseX=str(specialStructureX)
-                                enemyBaseY=str(specialStructureY)
+                                enemyBaseX=createStr(specialStructureX)
+                                enemyBaseY=createStr(specialStructureY)
                                 baseFoundEnemyBase=True
                         shudAttack=True
                         #position_performanceNew="A"
@@ -80,7 +80,7 @@ def ActRobot(robot):
                         specialStructure="EN"                
         
         if specialStructure=="EN":
-                robot.DeployVirus(200)
+                robot.DeployVirus(400)
         
         #Attacking
         attrob=int(base_signal[8:10])
@@ -113,8 +113,9 @@ def ActRobot(robot):
                         position_performanceNew="A"
                 else:
                         position_performanceNew="A"
-                targetYStrNew=createStr(int(enemyBaseY)-1)
-                targetXStrNew=createStr(int(enemyBaseX)-1)
+
+                targetYStrNew=createStr(specialStructureY-1)
+                targetXStrNew=createStr(specialStructureX)
                 next_pos=nextmovement(robotXstrNew+robotYstrNew,targetXStrNew+targetYStrNew)
         
         if position_performanceNew=="R" and position_performanceOld=="R":

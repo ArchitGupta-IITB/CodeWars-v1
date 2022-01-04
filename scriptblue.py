@@ -193,6 +193,8 @@ def ActRobot(robot):
         
         
         x=robotXstrNew+robotYstrNew+specialPosition+targetXStrNew+targetYStrNew+specialStructure+position_performanceNew+robotSignalOld[13:19]+isCollected
+        if next_pos!=-1:
+                return next_pos
         if len(x)==20:
                 robot.setSignal(x)
         else:

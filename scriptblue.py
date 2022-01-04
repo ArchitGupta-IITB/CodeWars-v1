@@ -40,8 +40,8 @@ def ActRobot(robot):
         targetXStrNew=createStr(targetXNew)
         targetYStrNew=createStr(targetYNew)
         baseFoundEnemyBase=False
-        enemyBaseX="  "
-        enemyBaseY="  "
+        enemyBaseX="00"
+        enemyBaseY="00"
         shudAttack = False  
         position_performanceOld=robotSignalOld[12]
         position_performanceNew=position_performanceOld
@@ -90,8 +90,9 @@ def ActRobot(robot):
                 shudAttack=True
                 targetXNew=int(enemyBaseX)
                 targetYNew=int(enemyBaseY)
-                targetXStrNew=enemyBaseX
-                targetYStrNew=enemyBaseY
+                targetXStrNew=createStr(targetXNew-1)
+                targetYStrNew=createStr(targetYNew-1)
+                next_pos=nextmovement(robotXstrNew+robotYstrNew,targetXStrNew+targetYStrNew)
                 if specialStructurestr==" "*4:
                         specialStructurestr=enemyBaseY+enemyBaseX
 
@@ -100,8 +101,8 @@ def ActRobot(robot):
                 #yys1=int(robotSignalOld[2:4])
                 specialStructureX=int(enemyBaseX)
                 specialStructureY=int(enemyBaseY)
-                xxdistance=abs(robotX-specialStructureX)
-                yydistance=abs(robotY-specialStructureY)
+                xxdistance=abs(robotX-int(enemyBaseX))
+                yydistance=abs(robotY-int(enemyBaseY))
                 distance=max(xxdistance,yydistance)
                 if distance<=20:
                         #send robot
@@ -115,8 +116,10 @@ def ActRobot(robot):
                 targetYStrNew=enemyBaseY
                 targetXStrNew=enemyBaseX
         
+        if position_performanceNew=="R" and position_performanceOld=="R":
+                next_pos=randint(1,4)
         #checking for enemy or b
-        
+        """
         #lets spiral out        
         if(position_performanceOld=="R")and not position_performanceNew=="A" :
                 #targetYStrNew=createStr(targetY)
@@ -173,7 +176,7 @@ def ActRobot(robot):
                 targetXStrNew=createStr(targetXNew)
                 targetYStrNew=createStr(targetYNew)
                 isCollected="N"
-                
+        """       
         #resetting the signal        
         '''
         Add your code here
@@ -317,7 +320,7 @@ def ActRobot(robot):
 
                                         
         if position_performanceOld=="A" or position_performanceNew=="A":
-                next_pos=nextmovement(robotXstrNew+robotYstrNew,targetXStrNew+targetYStrNew)
+                next_pos=nextmovement(robotXstrNew+robotYstrNew,enemyBaseX+enemyBaseY)
         if next_pos==-1:
                 if targetYStrNew=="  ":
                         next_pos=randint(1,4)
@@ -396,8 +399,8 @@ def distancebtw(s1="0000",s2="0000"):#"XXYY"
 def nextmovement(s1,s2):#XXYY
                 x=int(s1[0:2])
                 y=int(s1[2:4])
-                tx = int(s2[0:2])
-                ty = int(s2[2:4])
+                tx=int(s2[0:2])
+                ty=int(s2[2:4])
                 """
                 distx1=tx-x
                 disty1=ty-y
@@ -497,7 +500,7 @@ def ActBase(base):
                         t=-1
                 for i in range(0,len(canvaspartitions),t):
                         for j in range(0,len(canvaspartitions[i]),t):
-                                if elix>1000:
+                                if elix>500:
                                         base.create_robot(base_X_str+base_Y_str+"  "+canvaspartitions[i][j]+"  "+"R"+"  "+str(canvasX)+str(canvasY)+"N")
                                         #base.create_robot(base_X_str+base_Y_str+"  "+canvaspartitions[i][j]+"  "+"R"+"  "+"    "+"N")
                                         totalrobots+=1
@@ -662,7 +665,7 @@ def ActBase(base):
 
         if st!="  ":
                 base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+st+"0500"+"Y")
-
+        """
         if int(timestamp)>500:
                 if base.GetElixir()>600:
                         base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"UP"+"0001"+"Y")
@@ -673,7 +676,7 @@ def ActBase(base):
                         base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"SW"+"0001"+"Y")
                         base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"RT"+"0001"+"Y")
                         base.create_robot(base_X_str+base_Y_str+"  "+base_X_str+base_Y_str+"  "+"D"+"NW"+"0001"+"Y")
-                
+        """        
         
         #Defense applied
 

@@ -24,6 +24,8 @@ def ActRobot(robot):
         specialStructure="  "
         base_signal=robot.GetCurrentBaseSignal()
         (robotX,robotY) = robot.GetPosition()
+        robotXstrNew=createStr(robotX)
+        robotYstrNew=createStr(robotY)
         specialStructureX=-1
         specialStructureY=-1
         specialStructurestr="    " 
@@ -35,8 +37,8 @@ def ActRobot(robot):
                 targetY=int(robotSignalOld[8:10])
         targetXNew=targetX
         targetYNew=targetY
-        targetXStrNew="  "
-        targetYStrNew="  "
+        targetXStrNew=createStr(targetXNew)
+        targetYStrNew=createStr(targetYNew)
         baseFoundEnemyBase=False
         enemyBaseX="  "
         enemyBaseY="  "
@@ -117,8 +119,8 @@ def ActRobot(robot):
         
         #lets spiral out        
         if(position_performanceOld=="R")and not position_performanceNew=="A" :
-                targetYStrNew=createStr(targetY)
-                targetXStrNew=createStr(targetX)
+                #targetYStrNew=createStr(targetY)
+                #targetXStrNew=createStr(targetX)
                 robotYstrNew=createStr(robotY)
                 robotXstrNew=createStr(robotX)
                 if robotX==targetX and robotY==targetY:
@@ -140,7 +142,7 @@ def ActRobot(robot):
                                         else:
                                                 next_pos=2
                                         
-                                        if (targetY-robotY)==robotX-targetX==2:
+                                        if (targetY-robotY)==2 and robotX-targetX==2:
                                                 isCollected="F"
                                         
                                 else:
@@ -183,12 +185,9 @@ def ActRobot(robot):
                 Base Signal="BXBYEXEYNANCND0001TR"
                              01234567890123456789
         '''
-        #robotXstrNew="  "
-        #robotYstrNew="  "
         robotXstrNew=createStr(robotX)
         robotYstrNew=createStr(robotY)
-        targetXStrNew=createStr(targetXNew)
-        targetYStrNew=createStr(targetYNew)
+        
 
         
         

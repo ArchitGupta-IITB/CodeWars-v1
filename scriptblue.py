@@ -293,7 +293,7 @@ def ActRobot(robot):
                         if 1<=disty<=2:
                                 possible.append(1)                                                                     
                     
-                next_pos= possible[randint(0,len(list(set(possible))-1))]  
+                next_pos= possible[randint(0,len(list(set(possible)))-1)]  
         not_possible=[]  
         canvas_y= robot.GetDimensionY()
         canvas_x= robot.GetDimensionX()

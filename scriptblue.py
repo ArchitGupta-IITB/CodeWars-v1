@@ -20,7 +20,7 @@ def ActRobot(robot):
         robotSignalOld=robot.GetYourSignal()
         if len(robotSignalOld)==0:
                 robotSignalOld=robot.GetInitialSignal()
-        print(robotSignalOld)
+        #print(robotSignalOld)
         specialStructure="  "
         base_signal=robot.GetCurrentBaseSignal()
         (robotX,robotY) = robot.GetPosition()
@@ -644,7 +644,7 @@ def ActBase(base):
                 base.DeployVirus(800)
         
         base_signal_New=base_signal_Old[0:4]+enemy_baseX+enemy_baseY+attacking_no_New+createStr(resource_collectors)+createStr(defender)+timestamp_New+createStr(totalrobots)
-        print(base_signal_New)
+        #print(base_signal_New)
         base.SetYourSignal(base_signal_New)
         
         #apply defense

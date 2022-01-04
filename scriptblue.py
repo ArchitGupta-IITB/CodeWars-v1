@@ -73,6 +73,7 @@ def ActRobot(robot):
                                 enemyBaseY=createStr(specialStructureY)
                                 baseFoundEnemyBase=True
                         shudAttack=True
+                        next_pos=0
                         #position_performanceNew="A"
                         break
 
@@ -101,6 +102,8 @@ def ActRobot(robot):
                 #yys1=int(robotSignalOld[2:4])
                 specialStructureX=int(enemyBaseX)
                 specialStructureY=int(enemyBaseY)
+                targetXStrNew=createStr(specialStructureX-1)
+                targetYStrNew=createStr(specialStructureY-1)
                 xxdistance=abs(robotX-int(enemyBaseX))
                 yydistance=abs(robotY-int(enemyBaseY))
                 distance=max(xxdistance,yydistance)
@@ -113,8 +116,8 @@ def ActRobot(robot):
                         position_performanceNew="A"
                 else:
                         position_performanceNew="A"
-
-                targetYStrNew=createStr(specialStructureY-1)
+                specialStructure="EB"
+                targetYStrNew=createStr(specialStructureY)
                 targetXStrNew=createStr(specialStructureX)
                 next_pos=nextmovement(robotXstrNew+robotYstrNew,targetXStrNew+targetYStrNew)
         

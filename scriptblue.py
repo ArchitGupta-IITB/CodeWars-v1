@@ -198,7 +198,7 @@ def ActRobot(robot):
         else:
                 robot.setSignal(x+" "*(20-len(x)))
         if position_performanceOld=="D" and robotSignalOld[15:19]=="0001" :
-                possible=[]
+                possible=[0]
                 direc=robotSignalOld[13:15]
                 x=robotX
                 y=robotY
@@ -228,14 +228,18 @@ def ActRobot(robot):
                         if disty<1:
                                 possible.append(3)
                 if direc=="UP":
-                        possible.append(1)
-                if direc=="DN":
-                        possible.append(3)
+                        if disty<1:
+                                possible.append(1)
+                if direc=="DW":
+                        if disty<1:
+                                possible.append(3)
                 if direc=="RT":
-                        possible.append(2)
+                        if distx<1:
+                                possible.append(2)
                 if direc=="LT":
-                        possible.append(4)                        
-                next_pos= random.choice(possible)     
+                        if distx:
+                                possible.append(4)                        
+                next_pos= possible[randint(0,len(possible)-1)]     
                                         
                                 
                        
@@ -289,7 +293,7 @@ def ActRobot(robot):
                         if 1<=disty<=2:
                                 possible.append(1)                                                                     
                     
-                next_pos= random.choice(possible)  
+                next_pos= possible[randint(0,len(list(set(possible))-1))]  
         not_possible=[]  
         canvas_y= robot.GetDimensionY()
         canvas_x= robot.GetDimensionX()

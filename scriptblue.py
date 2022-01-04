@@ -40,8 +40,8 @@ def ActRobot(robot):
         targetXStrNew=createStr(targetXNew)
         targetYStrNew=createStr(targetYNew)
         baseFoundEnemyBase=False
-        enemyBaseX="00"
-        enemyBaseY="00"
+        enemyBaseX=""
+        enemyBaseY=""
         shudAttack = False  
         position_performanceOld=robotSignalOld[12]
         position_performanceNew=position_performanceOld
@@ -113,8 +113,9 @@ def ActRobot(robot):
                         position_performanceNew="A"
                 else:
                         position_performanceNew="A"
-                targetYStrNew=enemyBaseY
-                targetXStrNew=enemyBaseX
+                targetYStrNew=createStr(int(enemyBaseY)-1)
+                targetXStrNew=createStr(int(enemyBaseX)-1)
+                next_pos=nextmovement(robotXstrNew+robotYstrNew,targetXStrNew+targetYStrNew)
         
         if position_performanceNew=="R" and position_performanceOld=="R":
                 next_pos=randint(1,4)
